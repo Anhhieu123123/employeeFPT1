@@ -128,7 +128,7 @@ public class EmployeeController {
             
             if (employee.isEmpty()) {
                 redirectAttributes.addFlashAttribute("errorMessage", 
-                    "Không tìm thấy nhân viên với ID: " + id);
+                    "Không tìm thấy nhân viên: " + id);
                 return "redirect:/employees";
             }
             
@@ -176,7 +176,7 @@ public class EmployeeController {
         
         if (employee.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", 
-                "Không tìm thấy nhân viên với ID: " + id);
+                "Không tìm thấy nhân viên : " + id);
             return "redirect:/employees";
         }
         
