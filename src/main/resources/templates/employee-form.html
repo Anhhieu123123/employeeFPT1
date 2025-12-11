@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Form Nhân viên</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.2/css/bootstrap.min.css}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="#" th:href="@{/employees}">
+                <i class="fas fa-building"></i>
+                <span>FPT Employee Management</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <!-- Page Header -->
+                <div class="mb-5">
+                    <h2>
+                        <i class="fas fa-user-edit"></i>
+                        <span th:text="${pageTitle}">Form Nhân viên</span>
+                    </h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a th:href="@{/employees}">Danh sách</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page" th:text="${pageTitle}">
+                                Form
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <!-- Employee Form -->
+                <div class="card shadow-lg">
+                    <div class="card-header">
+                        <i class="fas fa-edit"></i>
+                        <span>Thông tin Nhân viên</span>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="${formAction == 'add'} ? @{/employees/add} : @{/employees/edit/{id}(id=${employee.id})}" 
+                              th:object="${employee}" 
+                              method="post"
+                              class="needs-validation"
+                              novalidate>
+                            
+                            <!-- Hidden ID field for edit mode -->
+                            <input type="hidden" th:field="*{id}" th:if="${formAction == 'edit'}">
+                            
+                            <!-- Employee Name -->
+                            <div class="mb-4">
+                                <label for="name" class="form-label">
+                                    <i class="fas fa-user"></i>
+                                    <span>Tên Nhân viên</span>
+                                    <span style="color: var(--danger);">*</span>
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="name" 
+                                       th:field="*{name}"
+                                       placeholder="Nhập tên nhân viên"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                                    Lỗi tên
+                                </div>
+                            </div>
+
+                            <!-- Employee Salary -->
+                            <div class="mb-4">
+                                <label for="salary" class="form-label">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Lương (VNĐ)</span>
+                                    <span style="color: var(--danger);">*</span>
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       th:class="${#fields.hasErrors('salary')} ? 'form-control is-invalid' : 'form-control'"
+                                       id="salary" 
+                                       th:field="*{salary}"
+                                       placeholder="Nhập mức lương"
+                                       step="1000"
+                                       min="0"
+                                       required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}">
+                                    Lỗi lương
+                                </div>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>Ví dụ: 15000000 (15 triệu VNĐ)</span>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                                <a th:href="@{/employees}" class="btn btn-secondary glow-effect">
+                                    <i class="fas fa-times"></i>
+                                    <span>Hủy bỏ</span>
+                                </a>
+                                <button type="submit" class="btn btn-primary glow-effect">
+                                    <i class="fas fa-save"></i>
+                                    <span th:text="${formAction == 'add'} ? 'Thêm mới' : 'Cập nhật'">Lưu</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Card -->
+                <div class="card bg-light mt-4">
+                    <div class="card-body">
+                        <h6 class="card-title" style="color: var(--accent-primary); font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Hướng dẫn</span>
+                        </h6>
+                        <ul class="mb-0" style="color: var(--text-secondary); padding-left: 1.5rem;">
+                            <li style="margin-bottom: 0.5rem;">Tên nhân viên không được để trống</li>
+                            <li style="margin-bottom: 0.5rem;">Lương phải là số dương</li>
+                            <li style="margin-bottom: 0;">Các trường có dấu <span style="color: var(--danger); font-weight: 700;">*</span> là bắt buộc</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <span class="text-muted">
+                <i class="fas fa-copyright"></i> 
+                2024 FPT Corporation - Employee Management System
+            </span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script th:src="@{/webjars/jquery/3.7.1/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js}"></script>
+    
+    <!-- Custom JS for form validation -->
+    <script>
+        // Bootstrap form validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+</body>
+</html>
